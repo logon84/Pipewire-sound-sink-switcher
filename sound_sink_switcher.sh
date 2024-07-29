@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Sinks array space-separated. Add or remove sink names from the outputs of this command:
+#Sinks array space-separated. Add or remove sink names from the output of this command:
 #pw-dump | jq '.[] | select(.info.props."media.class"=="Audio/Sink") | .info.props."node.name"'
 declare -a SINKS_TO_SWITCH=("alsa_output.pci-0000_00_03.0.hdmi-stereo" "alsa_output.pci-0000_00_1b.0.analog-stereo")
 SINK_ELEMENTS=$(echo ${#SINKS_TO_SWITCH[@]})
