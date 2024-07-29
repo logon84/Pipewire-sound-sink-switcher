@@ -1,5 +1,5 @@
 # Pipewire-sound-sink-switcher
-BASH script to switch pipewire sinks. Configure it to launch with a keyboard shortcut to quickly switch between sinks. Thisprogram reuires "notify-send" and "jq" programs installed.
+BASH script to switch pipewire sinks. Configure it to launch with a keyboard shortcut to quickly switch between sinks. This program reuires "notify-send" and "jq" programs installed.
 
 
 
