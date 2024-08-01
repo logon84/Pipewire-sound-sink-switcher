@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Sinks array space-separated. Add or remove sink names from the output of this command:
+#Sink array space-separated. Add or remove sink names to switch to from the output of this command:
 #pw-dump | jq '.[] | select(.info.props."media.class"=="Audio/Sink") | .info.props."node.name"'
 declare -a SINKS_TO_SWITCH=("alsa_output.pci-0000_00_03.0.hdmi-stereo" "alsa_output.pci-0000_00_1b.0.analog-stereo")
 SINK_ELEMENTS=$(echo ${#SINKS_TO_SWITCH[@]})
@@ -15,6 +15,6 @@ NEXT_ARRAY_INDEX=$((($ACTIVE_ARRAY_INDEX+1)%$SINK_ELEMENTS))
 NEXT_SINK_NAME=${SINKS_TO_SWITCH[$NEXT_ARRAY_INDEX]}
 NEXT_SINK_ID=$(pw-dump | jq '.[] | select(.info.props."node.name"=="'"$NEXT_SINK_NAME"'") | .id')
 
-#switch to sink
+#switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
-notify-send AudioSwitch "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME"
+notify-send.sh -s $(</tmp/sss.id) || true && notify-send.sh Audioswitch "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME" -p > /tmp/sss.id || true
