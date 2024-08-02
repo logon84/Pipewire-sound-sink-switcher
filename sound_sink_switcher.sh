@@ -18,7 +18,7 @@ ACTIVE_ARRAY_INDEX=$(echo ${SINKS_TO_SWITCH[@]/$ACTIVE_SINK_NAME//} | cut -d/ -f
 #get next array name and then its ID to switch to
 NEXT_ARRAY_INDEX=$((($ACTIVE_ARRAY_INDEX+1)%$SINK_ELEMENTS))
 NEXT_SINK_NAME=${SINKS_TO_SWITCH[$NEXT_ARRAY_INDEX]}
-NEXT_SINK_ID=$(wpctl status -n | grep -zoP  '(?<=Audio)(?s).*?(?=Sink endpoints:)' | grep -a $NEXT_SINK_NAME | awk '{print ($2+0)}')
+NEXT_SINK_ID=$(wpctl status -n | grep -zoP '(?<=Audio)(?s).*?(?=Sink endpoints:)' | grep -a $NEXT_SINK_NAME | awk '{print ($2+0)}')
 
 #switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
