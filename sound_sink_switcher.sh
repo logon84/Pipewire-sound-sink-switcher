@@ -11,7 +11,7 @@ SINKS_TO_SKIP=("alsa_output.pci-0000_00_03.0.pro-output-7|alsa_output.pci-0000_0
 declare -a SINKS_TO_SWITCH=($(wpctl status -n | grep -zoP '(?<=Audio)(?s).*?(?=Sink endpoints:)' | grep -a "vol:" | tr -d \* | awk '{print ($3)}' | grep -Ev $SINKS_TO_SKIP))
 SINK_ELEMENTS=$(echo ${#SINKS_TO_SWITCH[@]})
 
-#get current sink id, name and array position
+#get current sink name and array position
 ACTIVE_SINK_NAME=$(wpctl status -n | grep -zoP '(?<=Audio)(?s).*?(?=Sink endpoints:)' | grep -a '*' | awk '{print ($4)}')
 ACTIVE_ARRAY_INDEX=$(echo ${SINKS_TO_SWITCH[@]/$ACTIVE_SINK_NAME//} | cut -d/ -f1 | wc -w | tr -d ' ')
 
