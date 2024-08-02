@@ -5,7 +5,7 @@
 # Add sink names (separated with '|') to SKIP while switching with this script. Choose names to skip from the output of this command:
 # pw-dump | jq '.[] | select(.info.props."media.class"=="Audio/Sink") | .info.props."node.name"'
 # if no skip names are added, this script will switch between every available audio sink (output).
-SINKS_TO_SKIP=("alsa_output.pci-0000_00_03.0.pro-output-7|alsa_output.pci-0000_00_03.0.pro-output-8")
+SINKS_TO_SKIP=("alsa_output.pci-0000_00_03.0.pro-output-7|alsa_output.pci-0000_00_03.0.pro-output-8|other_sink_name")
 
 #Create array of sink names to switch to
 declare -a SINKS_TO_SWITCH=($(pw-dump | jq '.[] | select(.info.props."media.class"=="Audio/Sink") | .info.props."node.name"' | grep -Ev $SINKS_TO_SKIP))
