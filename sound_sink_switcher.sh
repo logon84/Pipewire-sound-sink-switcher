@@ -3,7 +3,7 @@
 # Description: A shell script to switch pipewire sinks (outputs). Optinally it requires notify-send.sh for showing notifications.
 
 # Add sink names (separated with '|') to SKIP while switching with this script. Choose names to skip from the output of this command:
-# wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─ )' | grep -a "vol:"
+# wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:"
 # if no skip names are added, this script will switch between every available audio sink (output).
 SINKS_TO_SKIP=("other_sink_name1|other_sink_name2|other_sink_name3")
 
