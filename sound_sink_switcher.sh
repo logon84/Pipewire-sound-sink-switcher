@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author: Ruben Lopez (Logon84) <rubenlogon@yahoo.es>
-# Description: A shell script to switch pipewire sinks (outputs). Optinally it requires notify-send.sh for showing notifications.
+# Description: A shell script to switch pipewire sinks (outputs). Optionally it requires notify-send.sh for showing notifications.
 
 # Add sink names (separated with '|') to SKIP while switching with this script. Choose names to skip from the output of this command:
 # wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:"
