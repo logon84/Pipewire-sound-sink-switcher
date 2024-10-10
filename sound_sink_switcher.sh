@@ -7,6 +7,9 @@
 # if no skip names are added, this script will switch between every available audio sink (output).
 SINKS_TO_SKIP=("other_sink_name1|other_sink_name2|other_sink_name3")
 
+#Define Aliases (OPTIONAL)
+ALIASES="sink_name1:ALIAS1\nsink_name2:ALIAS2"
+
 #Create array of sink names to switch to
 declare -a SINKS_TO_SWITCH=($(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:" | tr -d \* | awk '{print ($3)}' | grep -Ev $SINKS_TO_SKIP))
 SINK_ELEMENTS=$(echo ${#SINKS_TO_SWITCH[@]})
@@ -20,6 +23,9 @@ NEXT_ARRAY_INDEX=$((($ACTIVE_ARRAY_INDEX+1)%$SINK_ELEMENTS))
 NEXT_SINK_NAME=${SINKS_TO_SWITCH[$NEXT_ARRAY_INDEX]}
 NEXT_SINK_ID=$(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a $NEXT_SINK_NAME | awk '{print ($2+0)}')
 
+#get alias if it exists
+ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
+
 #switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
-notify-send.sh -s $(</tmp/sss.id) || true && notify-send.sh Audioswitch "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME" -p > /tmp/sss.id || true
+notify-send.sh -s $(</tmp/sss.id) || true && notify-send.sh Audioswitch "Switching to $ALIAS : $NEXT_SINK_NAME ($NEXT_SINK_ID)" -p > /tmp/sss.id || true
