@@ -26,14 +26,15 @@ NEXT_SINK_ID=$(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep
 #Switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
 $(gdbus call --session \
-                      --dest org.freedesktop.Notifications \
-                      --object-path /org/freedesktop/Notifications \
-                      --method org.freedesktop.Notifications.CloseNotification \
-                      "$(</tmp/sss.id)")
+             --dest org.freedesktop.Notifications \
+             --object-path /org/freedesktop/Notifications \
+             --method org.freedesktop.Notifications.CloseNotification \
+             "$(</tmp/sss.id)")
 ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
 $(gdbus call --session \
-                     --dest org.freedesktop.Notifications \
-                     --object-path /org/freedesktop/Notifications \
-                     --method org.freedesktop.Notifications.Notify sss \
-                     0 \
-                     gtk-dialog-info "Sound Sink Switcher" "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME ($ALIAS)" [] {} 5000 | sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id)
+             --dest org.freedesktop.Notifications \
+             --object-path /org/freedesktop/Notifications \
+             --method org.freedesktop.Notifications.Notify sss \
+             0 \
+             gtk-dialog-info "Sound Sink Switcher" "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME ($ALIAS)" [] {} 5000 | \
+             sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id)
