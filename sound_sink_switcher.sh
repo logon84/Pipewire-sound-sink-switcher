@@ -14,25 +14,23 @@ ALIASES="sink_name1:ALIAS1\nsink_name2:ALIAS2"
 declare -a SINKS_TO_SWITCH=($(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:" | tr -d \* | awk '{print ($3)}' | grep -Ev $SINKS_TO_SKIP))
 SINK_ELEMENTS=$(echo ${#SINKS_TO_SWITCH[@]})
 
-#get current sink name and array position
+#Get current sink name and array position
 ACTIVE_SINK_NAME=$(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a '*' | awk '{print ($4)}')
 ACTIVE_ARRAY_INDEX=$(echo ${SINKS_TO_SWITCH[@]/$ACTIVE_SINK_NAME//} | cut -d/ -f1 | wc -w | tr -d ' ')
 
-#get next array name and then its ID to switch to
+#Get next array name and then its ID to switch to
 NEXT_ARRAY_INDEX=$((($ACTIVE_ARRAY_INDEX+1)%$SINK_ELEMENTS))
 NEXT_SINK_NAME=${SINKS_TO_SWITCH[$NEXT_ARRAY_INDEX]}
 NEXT_SINK_ID=$(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a $NEXT_SINK_NAME | awk '{print ($2+0)}')
 
-#get alias if it exists
-ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
-
-#switch to sink & notify
+#Switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
 $(gdbus call --session \
                       --dest org.freedesktop.Notifications \
                       --object-path /org/freedesktop/Notifications \
                       --method org.freedesktop.Notifications.CloseNotification \
                       "$(</tmp/sss.id)")
+ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
 $(gdbus call --session \
                      --dest org.freedesktop.Notifications \
                      --object-path /org/freedesktop/Notifications \
