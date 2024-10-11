@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author: Ruben Lopez (Logon84) <rubenlogon@yahoo.es>
-# Description: A shell script to switch pipewire sinks (outputs). Optionally it requires notify-send.sh for showing notifications.
+# Description: A shell script to switch pipewire sinks (outputs).
 
 # Add sink names (separated with '|') to SKIP while switching with this script. Choose names to skip from the output of this command:
 # wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:"
@@ -28,4 +28,14 @@ ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
 
 #switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
-notify-send.sh -s $(</tmp/sss.id) || true && notify-send.sh Audioswitch "Switching to $ALIAS : $NEXT_SINK_NAME ($NEXT_SINK_ID)" -p > /tmp/sss.id || true
+$(gdbus call --session \
+                      --dest org.freedesktop.Notifications \
+                      --object-path /org/freedesktop/Notifications \
+                      --method org.freedesktop.Notifications.CloseNotification \
+                      "$(</tmp/sss.id)")
+$(gdbus call --session \
+                     --dest org.freedesktop.Notifications \
+                     --object-path /org/freedesktop/Notifications \
+                     --method org.freedesktop.Notifications.Notify sss \
+                     0 \
+                     gtk-dialog-info "Sound Sink Switcher" "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME ($ALIAS)" [] {} 5000 | sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id)
