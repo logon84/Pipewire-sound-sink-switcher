@@ -39,7 +39,7 @@ $(gdbus call --session \
              gtk-dialog-info "Sound Sink Switcher" "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME ($ALIAS)" [] {} 5000 | \
              sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id)
 
-#Replace notification icon
+#Replace notification icon (optional and only if you use commandLauncher@scollins cinnamon widget)
 #if [ $ALIAS = "HDMI" ]; then
 #    sed -i -e 's/audio-headphones/\/usr\/share\/icons\/Adwaita\/symbolic\/status\/amp_stereo_system.png/g' ~/.config/cinnamon/spices/commandLauncher@scollins/25.json
 #elif [ $ALIAS = "HEADPHONES" ]; then
