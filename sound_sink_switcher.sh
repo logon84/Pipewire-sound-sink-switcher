@@ -40,11 +40,7 @@ $(gdbus call --session \
              sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id)
 
 #Replace notification icon (optional and only if you use commandLauncher@scollins cinnamon widget)
-#if [ $ALIAS = "HDMI" ]; then
-#    sed -i -e 's/audio-headphones/\/usr\/share\/icons\/Adwaita\/symbolic\/status\/amp_stereo_system.png/g' ~/.config/cinnamon/spices/commandLauncher@scollins/25.json
-#elif [ $ALIAS = "HEADPHONES" ]; then
-#    sed -i -e 's/\/usr\/share\/icons\/Adwaita\/symbolic\/status\/amp_stereo_system.png/audio-headphones/g' ~/.config/cinnamon/spices/commandLauncher@scollins/25.json
-#else
-#    sed -i -e 's/audio-headphones/\/usr\/share\/icons\/Adwaita\/symbolic\/status\/dialog-question-symbolic/g' ~/.config/cinnamon/spices/commandLauncher@scollins/25.json
-#    sed -i -e 's/\/usr\/share\/icons\/Adwaita\/symbolic\/status\/amp_stereo_system.png/\/usr\/share\/icons\/Adwaita\/symbolic\/status\/dialog-question-symbolic/g' ~/.config/cinnamon/spices/commandLauncher@scollins/25.json
-#fi
+#ICONS="alsa_output.pci-0000_00_03.0.pro-output-3:/usr/share/icons/Adwaita/symbolic/status/amp_stereo_system.png\nalsa_output.pci-0000_00_1b.0.pro-output-0:audio-headphones"
+#ICON=$(echo $(echo -e $ICONS | grep $NEXT_SINK_NAME || echo ":/usr/share/icons/Adwaita/symbolic/status/dialog-question-symbolic.svg") | awk -F ':' '{print ($2)}')
+#eval DEST="~/.config/cinnamon/spices/commandLauncher\@scollins/25.json"
+#jq '.panelIcon.value|="'"$ICON"'"' $DEST > /tmp/25.json && mv /tmp/25.json $DEST
