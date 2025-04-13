@@ -25,13 +25,11 @@ NEXT_SINK_ID=$(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep
 
 #Switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
-if [ -f /tmp/sss.id ]; then
-    out=$(gdbus call --session \
+out=$(gdbus call --session \
              --dest org.freedesktop.Notifications \
              --object-path /org/freedesktop/Notifications \
              --method org.freedesktop.Notifications.CloseNotification \
-             "$(</tmp/sss.id)")
-fi
+             "$(cat /tmp/sss.id 2>/dev/null)" 2>/dev/null)
 ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
 out=$(gdbus call --session \
              --dest org.freedesktop.Notifications \
