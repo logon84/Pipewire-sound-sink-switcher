@@ -25,19 +25,20 @@ NEXT_SINK_ID=$(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep
 
 #Switch to sink & notify
 wpctl set-default $NEXT_SINK_ID
-out=$(gdbus call --session \
+gdbus call --session \
              --dest org.freedesktop.Notifications \
              --object-path /org/freedesktop/Notifications \
              --method org.freedesktop.Notifications.CloseNotification \
-             "$(cat /tmp/sss.id 2>/dev/null)" 2>/dev/null)
+             "$(cat /tmp/sss.id 2>/dev/null)" > /dev/null 2>&1
 ALIAS=$(echo -e $ALIASES | grep $NEXT_SINK_NAME | awk -F ':' '{print ($2)}')
-out=$(gdbus call --session \
+gdbus call --session \
              --dest org.freedesktop.Notifications \
              --object-path /org/freedesktop/Notifications \
-             --method org.freedesktop.Notifications.Notify sss \
-             0 \
-             gtk-dialog-info "Sound Sink Switcher" "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME ($ALIAS)" [] {} 5000 | \
-             sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id)
+             --method org.freedesktop.Notifications.Notify \
+             'Sound Sink Switcher' 0 audio-volume-high \
+             "Sound Sink Switcher" "Switching to $NEXT_SINK_ID : $NEXT_SINK_NAME ($ALIAS)" [] \
+             "{'transient': <true>}" 5000 \
+             | sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id
 
 #Replace notification icon (optional and only if you use commandLauncher@scollins cinnamon widget)
 #ICONS="alsa_output.pci-0000_00_03.0.pro-output-3:/usr/share/icons/Adwaita/symbolic/status/amp_stereo_system.png\nalsa_output.pci-0000_00_1b.0.pro-output-0:audio-headphones"
