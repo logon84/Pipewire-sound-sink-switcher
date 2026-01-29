@@ -5,10 +5,10 @@
 # Add sink names (separated with '|') to SKIP while switching with this script. Choose names to skip from the output of this command:
 # wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:"
 # if no skip names are added, this script will switch between every available audio sink (output).
-SINKS_TO_SKIP=("other_sink_name1|other_sink_name2|other_sink_name3")
+SINKS_TO_SKIP=("skip_sink_name1|skip_sink_name2|skip_sink_name3")
 
 #Define Aliases (OPTIONAL)
-ALIASES="sink_name1:ALIAS1\nsink_name2:ALIAS2"
+ALIASES="sink_name1:ALIAS1\nsink_name2:ALIAS2\nsink_name3:ALIAS3"
 
 #Create array of sink names to switch to
 declare -a SINKS_TO_SWITCH=($(wpctl status -n | grep -zoP '(?<=Sinks:)(?s).*?(?=├─)' | grep -a "vol:" | tr -d \* | awk '{print ($3)}' | grep -Ev $SINKS_TO_SKIP))
@@ -41,7 +41,8 @@ gdbus call --session \
              | sed 's/(uint32 \([0-9]\+\),)/\1/g' > /tmp/sss.id
 
 #Replace notification icon (optional and only if you use commandLauncher@scollins cinnamon widget)
-#ICONS="alsa_output.pci-0000_00_03.0.pro-output-3:/usr/share/icons/Adwaita/symbolic/status/amp_stereo_system.png\nalsa_output.pci-0000_00_1b.0.pro-output-0:audio-headphones"
+#ICONS="sink_name1:/usr/share/icons/Adwaita/symbolic/status/amp_stereo_system.png\nsink_name2:audio-headphones"
 #ICON=$(echo $(echo -e $ICONS | grep $NEXT_SINK_NAME || echo ":/usr/share/icons/Adwaita/symbolic/status/dialog-question-symbolic.svg") | awk -F ':' '{print ($2)}')
 #eval DEST="~/.config/cinnamon/spices/commandLauncher\@scollins/25.json"
 #jq '.panelIcon.value|="'"$ICON"'"' $DEST > /tmp/25.json && mv /tmp/25.json $DEST
+#dbus-send --session --dest=org.Cinnamon.LookingGlass --type=method_call /org/Cinnamon/LookingGlass org.Cinnamon.LookingGlass.ReloadExtension string:'commandLauncher@scollins' string:'APPLET'
